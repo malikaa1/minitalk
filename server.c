@@ -1,33 +1,35 @@
 #include "minitalk.h"
 
-t_sig_info sig_info;
 
 void handler(int sig, siginfo_t *siginfo, void *context)
 {
+    static char c;
+    static size_t size;
+
     if (sig == SIGUSR2)
     {
         //ft_putstr("1");
-        sig_info.c += (1 << sig_info.size);
-        sig_info.size++;
+        c += (1 << size);
+        size++;
     }
     else if (sig == SIGUSR1)
     {
         //ft_putstr("0");
-        sig_info.c += (0 << sig_info.size);
-        sig_info.size++;
+        c += (0 << size);
+        size++;
     }
 
-    if (sig_info.size == 8)
+    if (size == 8)
     {
         //ft_putnbr(siginfo->si_pid);
         //ft_putstr("\n");
-        ft_putchar(sig_info.c);
-        if (!sig_info.c)
+        ft_putchar(c);
+        if (!c)
             ft_putstr("error");
-        sig_info.size = 0;
-        sig_info.c = 0;
+        size = 0;
+        c = 0;
     }
-    else if (sig_info.size > 8)
+    else if (size > 8)
     {
         ft_putstr("error exiting ...");
         exit(EXIT_FAILURE);
@@ -44,8 +46,8 @@ int main()
     pid_t pid;
     struct sigaction action;
 
-    sig_info.c = 0;
-    sig_info.size = 0;
+    //sig_info.c = 0;
+    //sig_info.size = 0;
     pid = getpid();
     ft_putnbr(pid);
     ft_putchar('\n');

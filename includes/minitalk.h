@@ -7,14 +7,6 @@
 #include <sys/types.h>
 #include <signal.h>
 
-typedef struct s_sig_info
-{
-    int c;
-    size_t size;
-
-} t_sig_info;
-
-
 // char	*ft_itoa(int nb);
 int ft_atoi(const char *str);
 size_t ft_strlen(const char *s);
