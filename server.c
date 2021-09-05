@@ -2,7 +2,7 @@
 
 t_sig_info sig_info;
 
-void handler(int sig)
+void handler(int sig, siginfo_t *siginfo, void *context)
 {
     if (sig == SIGUSR2)
     {
@@ -19,6 +19,7 @@ void handler(int sig)
 
     if (sig_info.size == 8)
     {
+        //ft_putnbr(siginfo->si_pid);
         //ft_putstr("\n");
         ft_putchar(sig_info.c);
         if (!sig_info.c)
@@ -31,23 +32,42 @@ void handler(int sig)
         ft_putstr("error exiting ...");
         exit(EXIT_FAILURE);
     }
+
+    // if (sig == SIGUSR1)
+    //     kill(siginfo->si_pid, SIGUSR2);
+    // if (sig == SIGUSR2)
+    kill(siginfo->si_pid, SIGUSR2);
 }
 
 int main()
 {
     pid_t pid;
-    sigaction action;
+    struct sigaction action;
 
     sig_info.c = 0;
     sig_info.size = 0;
     pid = getpid();
     ft_putnbr(pid);
     ft_putchar('\n');
+
+    action.sa_sigaction = *handler;
+    action.sa_flags = SA_SIGINFO;
+
+    if (sigaction(SIGUSR1, &action, NULL) != 0)
+    {
+        ft_putstr("error signal");
+    }
+
+    if (sigaction(SIGUSR2, &action, NULL) != 0)
+    {
+        ft_putstr("error signal");
+    }
+
     while (1)
     {
         //sigaction action;
-        signal(SIGUSR2, handler);
-        signal(SIGUSR1, handler);
+        //signal(SIGUSR2, handler);
+        //signal(SIGUSR1, handler);
         pause();
     }
 }

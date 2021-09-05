@@ -1,6 +1,6 @@
 CC			= gcc
 RM			= rm -f
-CFLAGS		=  -Wall -Wextra -Werror
+CFLAGS		=  -Wall -Wextra
 INCLUDES    = -I ./includes
 NAME		= minitalk
 

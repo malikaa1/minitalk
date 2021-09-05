@@ -7,10 +7,11 @@
 
 int received = 1;
 
-// void wait_for_ack()
-// {
-// 	while (received == 0);
-// }
+void wait_for_ack()
+{
+	while (received == 0)
+		;
+}
 
 void send_msg(int pid, char *argv, size_t len)
 {
@@ -28,16 +29,16 @@ void send_msg(int pid, char *argv, size_t len)
 			if (((current_char >> bit) & 1) == 1)
 			{
 				//ft_putstr("1");
-				//wait_for_ack();
-				kill(pid, SIGUSR2);
+				wait_for_ack();
 				received = 0;
+				kill(pid, SIGUSR2);
 			}
 			else
 			{
 				//ft_putstr("0");
-				//wait_for_ack();
-				kill(pid, SIGUSR1);
+				wait_for_ack();
 				received = 0;
+				kill(pid, SIGUSR1);
 			}
 			bit++;
 			//usleep(500);
@@ -50,26 +51,27 @@ void send_msg(int pid, char *argv, size_t len)
 //0 1 1 0 0 0 0 1
 // 01100010
 
-// void ack_handler(int sig)
-// {
-// 	if (sig == SIGUSR2)
-// 	{
-// 		received = 1;
-// 	}
-// }
+void ack_handler(int sig)
+{
+	if (sig == SIGUSR2)
+	{
+		received = 1;
+	}
+}
 
 int main(int argc, char **argv)
 {
 	int server_pid;
 	if (argc == 3)
 	{
-		//signal(SIGUSR2, ack_handler);
+		signal(SIGUSR2, ack_handler);
+		//signal(SIGUSR1, ack_handler);
 		server_pid = ft_atoi(argv[1]);
 		send_msg(server_pid, argv[2], ft_strlen(argv[2]));
 		send_msg(server_pid, "\n", 1);
 	}
 	else
 		ft_putstr("usage : ./clien <PID>  <message>\n");
-	
+
 	return 0;
 }

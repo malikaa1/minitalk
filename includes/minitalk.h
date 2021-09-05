@@ -21,7 +21,7 @@ size_t ft_strlen(const char *s);
 void ft_putchar(char c);
 void ft_putnbr(int n);
 void ft_putstr(char *str);
-void handler(int sig);
+void handler(int sig, siginfo_t *siginfo, void *context);
 void send_msg(int pid, char *argv, size_t len);
 
 #endif
