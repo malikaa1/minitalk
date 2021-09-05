@@ -9,8 +9,7 @@ int received = 1;
 
 void wait_for_ack()
 {
-	while (received == 0)
-		;
+	while (received == 0);
 }
 
 void send_msg(int pid, char *argv, size_t len)
@@ -72,6 +71,6 @@ int main(int argc, char **argv)
 	}
 	else
 		ft_putstr("usage : ./clien <PID>  <message>\n");
-
+	
 	return 0;
 }

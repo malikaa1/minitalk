@@ -1,8 +1,18 @@
 #include "minitalk.h"
+#include <time.h>
+#include <sys/time.h>
 
+int number_of_signals = 0;
+struct timeval start, end;
 
-void handler(int sig, siginfo_t *siginfo, void *context)
+void handler(int sig, siginfo_t *siginfo, __attribute__((unused)) void *context)
 {
+    number_of_signals++;
+    if (number_of_signals == 1)
+    {
+        gettimeofday(&start, 0);
+    }
+
     static char c;
     static size_t size;
 
@@ -21,9 +31,16 @@ void handler(int sig, siginfo_t *siginfo, void *context)
 
     if (size == 8)
     {
-        //ft_putnbr(siginfo->si_pid);
-        //ft_putstr("\n");
         ft_putchar(c);
+        if (c == '\n')
+        {
+            gettimeofday(&end, 0);
+            long seconds = end.tv_sec - start.tv_sec;
+            long microseconds = end.tv_usec - start.tv_usec;
+            double elapsed = seconds + microseconds * 1e-6;
+            printf("elapsed : %f\n", elapsed);
+            number_of_signals = 0;
+        }
         if (!c)
             ft_putstr("error");
         size = 0;
@@ -34,10 +51,6 @@ void handler(int sig, siginfo_t *siginfo, void *context)
         ft_putstr("error exiting ...");
         exit(EXIT_FAILURE);
     }
-
-    // if (sig == SIGUSR1)
-    //     kill(siginfo->si_pid, SIGUSR2);
-    // if (sig == SIGUSR2)
     kill(siginfo->si_pid, SIGUSR2);
 }
 
